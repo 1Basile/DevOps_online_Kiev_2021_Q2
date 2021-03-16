@@ -1,0 +1,21 @@
+dddb503 HEAD@{0}: merge develop: Fast-forward
+bce2196 HEAD@{1}: checkout: moving from develop to main
+dddb503 HEAD@{2}: commit (merge): Fixed conflict
+a4c91d3 HEAD@{3}: merge images: Fast-forward
+f3aae86 HEAD@{4}: checkout: moving from styles to develop
+2e3091b HEAD@{5}: commit: Add styles
+f3aae86 HEAD@{6}: checkout: moving from images to styles
+a4c91d3 HEAD@{7}: checkout: moving from styles to images
+f3aae86 HEAD@{8}: checkout: moving from main to styles
+bce2196 HEAD@{9}: checkout: moving from styles to main
+f3aae86 HEAD@{10}: checkout: moving from develop to styles
+f3aae86 HEAD@{11}: checkout: moving from images to develop
+a4c91d3 HEAD@{12}: commit: Adding images, inserting them to html file.
+f3aae86 HEAD@{13}: checkout: moving from styles to images
+f3aae86 HEAD@{14}: checkout: moving from develop to styles
+f3aae86 HEAD@{15}: checkout: moving from images to develop
+f3aae86 HEAD@{16}: checkout: moving from develop to images
+f3aae86 HEAD@{17}: commit: Adding `index` file
+bce2196 HEAD@{18}: checkout: moving from main to develop
+bce2196 HEAD@{19}: commit: Initial commit
+08926a0 HEAD@{20}: clone: from https://github.com/1Basile/DevOps_online_Kiev_2021_Q2.git
