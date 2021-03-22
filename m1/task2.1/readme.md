@@ -62,7 +62,16 @@
 
 ### 2.4)
 
-*Table of different network modes, given to us during the lecture is perfectly correct, so I see no need to insert it here.*
+| Mode		| VM -> Host	| VM <- Host	| VM1 <-> VM2	| VM -> Net/LAN	| VM <- Net/LAN	|
+| :-----------: | :-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
+| Host-only 	| +		| +		| +		| -		| -		|
+| Internal	| -		| -		| +		| -		| -		|
+| Briged	| +		| +		| +		| + 		| +		|
+| NAT		| +		| Port forward	| - 		| +		| Port forward	|
+| NAT service	| +		| Port forward	| + 		| +		| Port forward	|
+
+
+ *As we can see, table of different network modes, given to us during the lecture is perfectly correct.*
 
 ![Screenshot](screenshots/VBox_0.png)
 
