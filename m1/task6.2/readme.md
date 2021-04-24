@@ -1,5 +1,5 @@
 
-### Networking with Linux. Task 6.2
+# Networking with Linux. Task 6.2
 
 ## 1 - 3)
 
