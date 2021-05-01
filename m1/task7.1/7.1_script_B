@@ -1,0 +1,115 @@
+#!/bin/bash
+
+unset log_file
+unset task_num
+unset output_file
+
+print_usage() {
+	 echo "Script display some info about apache log file."
+   echo
+   echo "Syntax: 7.1_script_B [-h|f:|1|2|3|4|5|6] apache_log_file"
+   echo "options:"
+   echo "-h	--help    	print this help message."
+   echo "-f	--log-file    	Apache log file name [Mandatory]."
+   echo "-o	--output-file   File to wich write the result."
+   echo "-1			Show: From which ip where most requests."
+   echo "-2			Show: What is the most requested page."
+   echo "-3			Show: How many requests were there from each ip."
+   echo "-4			Show: What non-existent pages were clients referred to."
+   echo "-5			Show: What time did site get the most requests."
+   echo "-6			Show: What search bots have accessed the site. (UA + IP)."
+   echo
+   echo "Warning: If you specify more than one option[1-6] at the time, last one will be used."
+   echo
+}
+
+task_1() {
+ echo "From which ip where the most requests?"
+ echo "->"
+ grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" $log_file | sort | uniq -c | sort -gr | head -n 1
+}
+
+task_2() {
+ echo "What is the most requested page?"
+ echo "->"
+ awk '{print $7}' $log_file | sort | uniq -c | sort -gr | head -n 1
+}
+
+task_3() {
+ echo "How many requests were there from each ip?"
+ echo "->"
+ cut -d " " -f 1 $log_file | sort | uniq -c | sort -gr
+}
+
+task_4() {
+ echo "What non-existent pages were clients referred to?"
+ echo "->"
+ grep 'HTTP/1.0" 404 ' $log_file | cut -d " " -f 7,8 | sort | uniq -c | sort -gr
+}
+
+task_5() {
+  echo "What time did site get the most requests?"
+  echo "->"
+  cut -d " " -f 4 $log_file | cut -d : -f 2,3 | sort | uniq -c | sort -gr | head -n 3
+}
+
+task_6() {
+  echo "What search bots have accessed the site. (UA + IP)?"
+  echo "->"
+  grep "bot." $log_file | cut -d " " -f 7 | sort | uniq | sort -gr
+}
+
+#Parsing params
+ for param in "$@"; do
+        shift
+        case "$param" in 
+        	"--help") 		set -- "$@" "-h";;
+        	"--log-file") 		set -- "$@" "-f";;
+        	"--output-file") 	set -- "$@" "-o";;
+        	*)			set -- "$@" "$param"
+        esac
+ done
+
+OPTIND=1
+while getopts ":hf:o:123456" opt; do
+	case "$opt" in
+		h) print_usage; exit 0				    ;;
+		f) log_file="$OPTARG"		       		    ;;
+		o) output_file="$OPTARG"			    ;;
+		1) task_num=1		       		   	    ;;
+		2) task_num=2				   	    ;;
+		3) task_num=3				   	    ;;
+		4) task_num=4				   	    ;;
+		5) task_num=5				   	    ;;
+		6) task_num=6				   	    ;;
+		:) echo "option -$OPTARG needs an argument"; exit 1 ;;
+		*) echo "invalid option -$OPTARG"; exit 1 	    ;;
+		?) print_usage >&2; exit 1			    ;;
+	esac
+done
+
+# No options where given 
+if [ $OPTIND -eq 1 ]; then print_usage; exit 0; fi
+
+# If mandatory params are not given
+if [ -z "$log_file" ] || [ -z "$task_num" ]; then
+	echo "Missing mandatory parameters" >&2
+	exit 1
+fi
+
+shift $(expr $OPTIND - 1)
+
+# Main 
+
+if ! [ -z "${output_file}" ]; then
+	exec 1>"$output_file"
+fi
+
+case "$task_num" in
+	1) task_1					;;
+	2) task_2					;;
+	3) task_3					;;
+	4) task_4					;;
+	5) task_5					;;
+	6) task_6					;;
+esac

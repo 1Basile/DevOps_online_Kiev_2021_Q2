@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Default behavior
+unset to_show_all;
+unset target;
+
+# Function
+print_usage() {
+	 echo "Script display IPs and host names of each machine in subnet."
+   echo
+   echo "Syntax: 7.1_script_A [-h|a|t:]"
+   echo "options:"
+   echo "-h	--help    	print this help message."
+   echo "-a	--all	    	displays the IP addresses  of all hosts in the current subnet."
+   echo "-t --target [ xxx.xxx.xxx.xxx ]    displays a list of open system TCP ports of machine."
+   echo
+}
+
+show_ip_in_subnet() {
+   echo "In subnet 192.168.1.0/24 alives hosts are:"
+   nmap -sP 192.168.1.* | grep "for" | grep  -oP '\d+.\d+.\d+.\d+'
+   echo
+}
+
+show_host_ports() {
+  echo "Host's ports:"
+ nmap $target | sed -e "1,4d" 
+}
+
+#Parsing params
+ for param in "$@"; do
+        shift
+        case "$param" in 
+        	"--help") 	set -- "$@" "-h";;
+        	"--all")  	set -- "$@" "-a";;
+        	"--target") 	set -- "$@" "-t";;
+        	*)		set -- "$@" "$param"
+        esac
+ done
+
+OPTIND=1
+while getopts ":hat:" opt; do
+	case "$opt" in
+		h) print_usage; exit 0				    ;;
+		a) to_show_all=1		       		    ;;
+		t) target="$OPTARG"				    ;;
+		:) echo "option -$OPTARG needs an argument"; exit 1 ;;
+		*) echo "invalid option -$OPTARG"; exit 1 	    ;;
+		?) print_usage >&2; exit 1			    ;;
+	esac
+done
+
+# No options where given 
+if [ $OPTIND -eq 1 ]; then print_usage; exit 0; fi
+
+shift $(expr $OPTIND - 1)
+
+# Main 
+if ! [ -z $to_show_all ]; then show_ip_in_subnet; fi
+
+if ! [ -z $target ]; then show_host_ports; fi
