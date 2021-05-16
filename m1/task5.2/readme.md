@@ -1,4 +1,4 @@
-### Linux Essentials Task 5.2
+# Linux Essentials Task 5.2
 
 ## 1)
 
